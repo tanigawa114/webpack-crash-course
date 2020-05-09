@@ -1,42 +1,55 @@
-const path = require("path");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 /** スタイルをcssファイルに分離 */
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 /** console.log()を本番環境から削除 */
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 /** styleシート圧縮 */
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-const outputPath = path.resolve(__dirname, "dist");
+const outputPath = path.resolve(__dirname, 'dist');
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: './src/index.js',
   output: {
-    filename: "main.js",
+    filename: 'main.js',
     path: outputPath,
   },
   module: {
     rules: [
       {
+        enforce: 'pre',
         test: /\.jsx?$/,
-        exclude: /node_nodules/,
-        loader: "babel-loader",
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'eslint-loader',
+            options: {
+              formatter: require('eslint/lib/cli-engine/formatters/stylish'),
+            },
+          },
+        ],
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
       },
       {
         test: /\.(sc|c)ss$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(jpe?g|png|gif|ico)$/i,
-        loader: "url-loader",
+        loader: 'url-loader',
         options: {
           limit: 2048,
-          name: "./images/[name].[ext]",
+          name: './images/[name].[ext]',
         },
       },
       {
         test: /\.html$/,
-        loader: "html-loader",
+        loader: 'html-loader',
       },
     ],
   },
@@ -45,11 +58,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: "./src/index.html",
-      filename: "./index.html",
+      template: './src/index.html',
+      filename: './index.html',
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css",
+      filename: '[name].[hash].css',
     }),
   ],
   optimization: {
@@ -64,5 +77,5 @@ module.exports = {
       new OptimizeCSSAssetsPlugin({}),
     ],
   },
-  devtool: "eval-source-map",
+  devtool: 'eval-source-map',
 };
