@@ -1,7 +1,11 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+/** スタイルをcssファイルに分離 */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+/** console.log()を本番環境から削除 */
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+/** styleシート圧縮 */
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 const outputPath = path.resolve(__dirname, "dist");
 
@@ -57,6 +61,7 @@ module.exports = {
           },
         },
       }),
+      new OptimizeCSSAssetsPlugin({}),
     ],
   },
 };
